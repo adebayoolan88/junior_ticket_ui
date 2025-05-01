@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Junior Tickets</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Orbitron', sans-serif;
+      background-color: #000000; /* Black */
+      color: #d4af37; /* Gold */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .logo {
+      width: 300px;
+      margin-top: 40px;
+    }
+
+    .card {
+      background: #1e1e1e;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      width: 280px;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    input, select, button {
+      width: 100%;
+      margin: 8px 0;
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-family: inherit;
+    }
+
+    input, select {
+      background-color: #333;
+      color: #f1f1f1;
+    }
+
+    button {
+      background-color: #d4af37;
+      color: #1e1e1e;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    #leaderboard {
+      margin-top: 20px;
+      text-align: left;
+      color: #f1f1f1;
+    }
+  </style>
+</head>
+<body>
+  <!-- Top Logo Only -->
+  <img src="logo-text.png" alt="Junior Tickets Logo" class="logo" />
+
+  <!-- Ticket Logger UI -->
+  <div class="card">
+    <input id="name" type="text" placeholder="Player Name" />
+    <select id="action">
+      <option value="">-- Select Action --</option>
+      <option>Top Frag</option>
+      <option>1 v X Clutch Round 9</option>
+      <option>No Team Killing All Game</option>
+      <option>No Gadgets Destroyed All Game</option>
+    </select>
+    <button onclick="submit()">Submit</button>
+    <button onclick="getLeaderboard()">See Leaderboard</button>
+    <div id="leaderboard"></div>
+  </div>
+
+  <script>
+    async function submit() {
+      const name = document.getElementById('name').value.trim();
+      const action = document.getElementById('action').value;
+      if (!name || !action) {
+        alert("Please enter a name and select an action.");
+        return;
+      }
+      const res = await fetch('/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, action })
+      });
+      const msg = await res.text();
+      alert(msg);
+    }
+
+    async function getLeaderboard() {
+      const res = await fetch('/leaderboard');
+      const players = await res.json();
+      document.getElementById('leaderboard').innerHTML =
+        "<h4>Leaderboard:</h4>" +
+        players.map(p => `<p>${p.name}: 🎟️ ${p.tickets}</p>`).join('');
+    }
+  </script>
+</body>
+</html>
