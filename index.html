@@ -89,7 +89,8 @@
         alert("Please enter a name and select an action.");
         return;
       }
-      const res = await fetch('/submit', {
+      const res = await fetch('https://junior-ticket-api.onrender.com/submit', {
+
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, action })
@@ -99,7 +100,8 @@
     }
 
     async function getLeaderboard() {
-      const res = await fetch('/leaderboard');
+      const res = await fetch('https://junior-ticket-api.onrender.com/leaderboard');
+
       const players = await res.json();
       document.getElementById('leaderboard').innerHTML =
         "<h4>Leaderboard:</h4>" +
